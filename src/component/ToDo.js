@@ -17,11 +17,11 @@ const ToDo = () => {
         fetch('http://task.atiar.info/api/todo')
             .then(res => res.json())
             .then(data => {
-                const res = data.data.slice(0).sort((a, b) =>
+                const res = data?.data?.slice(0).sort((a, b) =>
                     a.start_date.localeCompare(b.start_date) || a.start_time.localeCompare(b.start_time));
-
-                console.log(res);
-                setTask(res)
+                let res1 = res.sort((a, b) => a.is_completed - b.is_completed)
+                setTask(res1)
+                
             })
     }, [reFetch])
     console.log(tasks);
