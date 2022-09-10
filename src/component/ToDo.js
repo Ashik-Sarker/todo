@@ -28,8 +28,18 @@ const updateCheckAuto = (id, isChecked) => {
 const createTimeStamps = (task) => {
     if (new Date(task.end_date + " " + task.end_time).getTime() < new Date().getTime() ) {
         updateCheckAuto(task.id, 1);
+
     }
 }
+const startDateAlert = (task) => {
+    if (new Date(task.start_date + " " + task.start_time).getTime() <= new Date().getTime()
+        &&
+        new Date(task.end_date + " " + task.end_time).getTime() >= new Date().getTime()
+    ) {
+        toast(`has started${task.title}`)
+    }
+}
+
 
 const ToDo = () => {
     const [confirmation, setConfirmation] = useState(false);
@@ -51,6 +61,7 @@ const ToDo = () => {
             })
         
         tasks.map(task => createTimeStamps(task))
+        tasks.map(task => startDateAlert(task))
 
     }, [reFetch])
     console.log(tasks);
