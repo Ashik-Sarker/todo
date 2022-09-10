@@ -4,6 +4,33 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+const updateCheckAuto = (id, isChecked) => {
+
+        fetch(`http://task.atiar.info/api/todo/complete`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: id,
+                is_completed: isChecked,
+            })
+            })
+            .then(res => {
+                return res.json()
+            })
+            .then(data => {
+                toast.success("Task Completed successfully");
+                console.log(data);
+            })
+    }
+
+const createTimeStamps = (task) => {
+    if (new Date(task.end_date + " " + task.end_time).getTime() < new Date().getTime() ) {
+        updateCheckAuto(task.id, 1);
+    }
+}
+
 const ToDo = () => {
     const [confirmation, setConfirmation] = useState(false);
     const [track, setTrack] = useState('');
@@ -19,10 +46,12 @@ const ToDo = () => {
             .then(data => {
                 const res = data?.data?.slice(0).sort((a, b) =>
                     a.start_date.localeCompare(b.start_date) || a.start_time.localeCompare(b.start_time));
-                let res1 = res.sort((a, b) => a.is_completed - b.is_completed)
-                setTask(res1)
-                
+                const res1 = res.sort((a, b) => a.is_completed - b.is_completed)
+                setTask(res1);
             })
+        
+        tasks.map(task => createTimeStamps(task))
+
     }, [reFetch])
     console.log(tasks);
 
@@ -140,6 +169,7 @@ const ToDo = () => {
                 console.log(data);
             })
     }
+
 
    
     return (
